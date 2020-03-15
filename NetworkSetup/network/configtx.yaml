@@ -1,0 +1,233 @@
+Organizations:
+  - &OrdererOrg
+    Name: Orderer
+    ID: OrdererMSP
+    MSPDir: crypto-config/ordererOrganizations/reliance-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+
+  - &Infrastructure
+    Name: RelianceInfrastructureMSP
+    ID: RelianceInfrastructureMSP
+    MSPDir: crypto-config/peerOrganizations/infrastructure.reliance-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('RelianceInfrastructureMSP.admin', 'RelianceInfrastructureMSP.peer', 'RelianceInfrastructureMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('RelianceInfrastructureMSP.admin', 'RelianceInfrastructureMSP.peer', 'RelianceInfrastructureMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('RelianceInfrastructureMSP.admin', 'RelianceInfrastructureMSP.peer', 'RelianceInfrastructureMSP.client')"
+    AnchorPeers:
+      - Host: peer0.infrastructure.reliance-network.com
+        Port: 7051
+
+  - &ReliancePower
+    Name: ReliancePowerMSP
+    ID: ReliancePowerMSP
+    MSPDir: crypto-config/peerOrganizations/power.reliance-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ReliancePowerMSP.admin', 'ReliancePowerMSP.peer', 'ReliancePowerMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ReliancePowerMSP.admin', 'ReliancePowerMSP.peer', 'ReliancePowerMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ReliancePowerMSP.admin', 'ReliancePowerMSP.peer', 'ReliancePowerMSP.client')"
+    AnchorPeers:
+      - Host: peer0.power.reliance-network.com
+        Port: 9051
+
+  - &RelianceCommunications
+    Name: RelianceCommunicationsMSP
+    ID: RelianceCommunicationsMSP
+    MSPDir: crypto-config/peerOrganizations/communications.reliance-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('RelianceCommunicationsMSP.admin', 'RelianceCommunicationsMSP.peer', 'RelianceCommunicationsMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('RelianceCommunicationsMSP.admin', 'RelianceCommunicationsMSP.peer', 'RelianceCommunicationsMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('RelianceCommunicationsMSP.admin', 'RelianceCommunicationsMSP.peer', 'RelianceCommunicationsMSP.client')"
+    AnchorPeers:
+      - Host: peer0.communications.reliance-network.com
+        Port: 11051
+
+
+  - &RelianceEntertainment
+    Name: RelianceEntertainmentMSP
+    ID: RelianceEntertainmentMSP
+    MSPDir: crypto-config/peerOrganizations/entertainment.reliance-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('RelianceEntertainmentMSP.admin', 'RelianceEntertainmentMSP.peer', 'RelianceEntertainmentMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('RelianceEntertainmentMSP.admin', 'RelianceEntertainmentMSP.peer', 'RelianceEntertainmentMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('RelianceEntertainmentMSP.admin', 'RelianceEntertainmentMSP.peer', 'RelianceEntertainmentMSP.client')"
+    AnchorPeers:
+      - Host: peer0.entertainment.reliance-network.com
+        Port: 13051
+
+
+  - &RelianceCapital
+    Name: RelianceCapitalMSP
+    ID: RelianceCapitalMSP
+    MSPDir: crypto-config/peerOrganizations/capital.reliance-network.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('RelianceCapitalMSP.admin', 'RelianceCapitalMSP.peer', 'RelianceCapitalMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('RelianceCapitalMSP.admin', 'RelianceCapitalMSP.peer', 'RelianceCapitalMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('RelianceCapitalMSP.admin', 'RelianceCapitalMSP.peer', 'RelianceCapitalMSP.client')"
+    AnchorPeers:
+      - Host: peer0.capital.reliance-network.com
+        Port: 15051
+
+#Capabilities
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V1_4_3: true
+    V1_3: false
+    v1_1: false
+  Orderer: &OrdererCapabilities
+    V1_4_2: true
+    V1_1: false
+  Application: &ApplicationCapabilities
+    V1_4_2: true
+    V1_3: false
+    V1_2: false
+    V1_1: false
+   
+
+#Application
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies: &ApplicationDefaultPolicies
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "ANY Admins"
+  Capabilities: *ApplicationCapabilities
+
+#Orderer
+Orderer: &OrdererDefaults
+    # Orderer Type: The orderer implementation to start
+    # Available types are "solo" and "kafka
+  #OrdererType: solo
+  OrdererType: kafka
+  Addresses:
+    - orderer.reliance-network.com:7050
+  BatchTimeout: 5s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 256 MB
+    PreferredMaxBytes: 512 KB
+  Kafka:
+    # Brokers: A list of Kafka brokers to which the orderer connects
+    Brokers:
+            - 127.0.0.1:9092
+
+  Organizations:
+  Capabilities: *OrdererCapabilities
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "ANY Admins"
+    # BlockValidation specifies what signatures must be included in the block
+    # from the orderer for the peer to validate it.
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+
+Channel: &ChannelDefaults
+  Policies:
+    # Who may invoke the 'Deliver' API
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    # Who may invoke the 'Broadcast' API
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    # By default, who may modify elements at this config level
+    Admins:
+      Type: ImplicitMeta
+      Rule: "ANY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+
+
+#Profiles
+Profiles:
+  OrdererGenesis:
+    <<: *ChannelDefaults
+    Capabilities:
+      <<: *ChannelCapabilities
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - <<: *OrdererOrg
+    Consortiums:
+      RelianceConsortium:
+        Organizations:
+          - *Infrastructure
+          - *ReliancePower
+          - *RelianceCommunications
+          - *RelianceEntertainment
+          - *RelianceCapital
+
+  ChannelFiveOrgs:
+    Consortium: RelianceConsortium
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+          - *Infrastructure
+          - *ReliancePower
+          - *RelianceCommunications
+          - *RelianceEntertainment
+          - *RelianceCapital
+
+      Capabilities:
+        <<: *ApplicationCapabilities

@@ -1,0 +1,42 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: reliance-network.com
+    Specs:
+      - Hostname: orderer
+PeerOrgs:
+ - Name: RelianceInfrastructure
+   Domain: infrastructure.reliance-network.com
+   EnableNodeOUs: true
+   Template:
+      Count: 2
+   Users:
+      Count: 1
+ - Name: ReliancePower
+   Domain: power.reliance-network.com
+   EnableNodeOUs: true
+   Template:
+      Count: 2
+   Users:
+      Count: 1
+ - Name: RelianceCommunications
+   Domain: communications.reliance-network.com
+   EnableNodeOUs: true
+   Template:
+      Count: 2
+   Users:
+      Count: 1
+ - Name: RelianceEntertainment
+   Domain: entertainment.reliance-network.com
+   EnableNodeOUs: true
+   Template:
+      Count: 2
+   Users:
+      Count: 1
+ - Name: RelianceCapital
+   Domain: capital.reliance-network.com
+   EnableNodeOUs: true
+   Template:
+      Count: 2
+   Users:
+      Count: 1
+ 

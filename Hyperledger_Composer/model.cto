@@ -1,0 +1,142 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+namespace org.asset.tracker
+
+participant Exporter identified by exporterId {
+o String exporterId
+o String exporterEmail
+o String exporterAddress
+o Double accountBalance
+}
+
+participant Shipper identified by shipperId{
+o String shipperId
+o String shipperEmail
+o String shipperAddress
+o Double accountBalance
+}
+
+participant Importer identified by importerId{
+o String importerId
+o String importerEmail
+o String importerAddress
+o Double accountBalance
+}
+
+enum AssetType{
+o Medicine
+o Fuel
+o Trucks
+o Wires
+o Tables
+o Laptops
+o Chairs
+}
+
+enum ShipmentStatus{
+o CREATED
+o IN_TRANSIT
+o ARRIVED
+}
+
+enum CompassDirection{
+o N
+o S
+o E
+o W
+}
+
+asset Shipment identified by shipmentId{
+o String shipmentId
+o AssetType assetType
+o ShipmentStatus shipmentStatus
+o Long unitCount
+--> Contract contract
+o TemperatureReading[] temperatureReadings
+o AccelerationReading[] accelerationReadings
+o GPSReading[] gpsReadings
+}
+asset Contract identified by contractId{
+o String contractId
+--> Exporter exporter
+--> Importer importer
+--> Shipper shipper
+o DateTime arrivalDateTime
+o Double unitPrice
+o Double minimumTemperature
+o Double maximumTemperature
+o Double minimumPenaltyFactor
+o Double maximumPenaltyFactor
+o Double maximumAcceleration
+}
+
+event TemperatureThresholdEvent{
+o Double temperature
+o String message
+o String latitude
+o String longitude
+o String readingTime
+--> Shipment shipment
+}
+
+event AccelerationThresholdEvent{
+o Double accelerationX
+o Double accelerationY
+o Double accelerationZ
+o String message
+o String latitude
+o String longitude
+o String readingTime
+--> Shipment shipment
+}
+
+event ShipmentInAPortEvent{
+o String message
+--> Shipment shipment
+
+}
+
+abstract transaction ShipmentTransaction{
+--> Shipment shipment
+}
+
+transaction AccelerationReading extends ShipmentTransaction{
+o Double accelerationX
+o Double accelerationY
+o Double accelerationZ
+o String latitude
+o String longitude
+o String readingTime optional
+}
+
+transaction TemperatureReading extends ShipmentTransaction{
+o Double celsius
+o String latitude
+o String longitude
+o String readingTime optional
+}
+
+transaction GPSReading extends ShipmentTransaction{
+o String latitude
+o CompassDirection latitudeDirection
+o String longitude
+o CompassDirection longitudeDirection
+o String readingTime optional
+o String readingDate optional
+}
+
+transaction ShipmentReceived{
+--> Shipment shipment
+}

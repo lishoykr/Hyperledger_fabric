@@ -143,8 +143,8 @@ Application: &ApplicationDefaults
 Orderer: &OrdererDefaults
     # Orderer Type: The orderer implementation to start
     # Available types are "solo" and "kafka
-  #OrdererType: solo
-  OrdererType: kafka
+  OrdererType: solo
+  #OrdererType: kafka
   Addresses:
     - orderer.reliance-network.com:7050
   BatchTimeout: 5s

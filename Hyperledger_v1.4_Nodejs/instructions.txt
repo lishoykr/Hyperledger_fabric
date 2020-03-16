@@ -1,1 +1,31 @@
-1) 
+Medicine supply chain
+
+This is a smart contract for medicine supply chain network. There are five organizations in this network Manufacturers,Distributors,Retailers,Consumers and Transporters. This smart contract will track the medicine supply from Manufacturer distributer retailer and consumer. Transporter will act as another organisation which will transport medicines between different organisation.
+
+Medicine supply chain workflow and corresponding functions.
+
+1) Company Registration: All the parties who wish to be part of the supply chain network first need to make registration.
+Function : registerCompany
+
+2) Drug Registration: As a part of this process, any drug manufactured has to be registered on the ledger by the manufacturing company. 
+Function: addDrug
+
+3) Transfer Drug: A buyer of the product will raise a Purchase Order for a particular drug.
+The Purchase Order will be generated for a batch of drugs. It will include information like the name of the drug, the quantity required, Buyer, etc.
+Function: createPO
+
+4) Create Shipment: Based on the Purchase Order, the seller of the drug will initiate the process of shipment of the drug with the help of a transporter company and a shipment object will be created.
+Function: createShipment
+
+5) Shipment Update:Once the consignment is received by the buyer, the buyer will become the new owner of each item of the batch. 
+If the buyer is a consumer, then the Purchase Order and the shipment process need not be initiated. Only the owner of the drug is changed from the retailer to the consumer. 
+Function : updateShipment
+
+6) Retailer selling : While retailer sells the drug, the ownershipchange is is entered in to the ledger with customer details. 
+Function: retailDrug
+
+7) View Lifecycle: customer can verify the authenticity by viewing the drug history and manufactur will alsocan track the drug supply chain using this function.
+Function: viewHistory
+
+8) View Drug Current State: this facility help any of the parties to check the current state of the drug.
+ Function: viewDrugCurrentState

@@ -21,10 +21,10 @@ class pharmanetContract extends Contract {
 	 * @param ctx - The transaction context object
 	 * @param companyCRN - This field company Registration Number (CRN) and the Name of the company
 	 * @param companyName - Name of the company
-	 * @param Location- Location of the company
+	 * @param location- Location of the company
 	 * @param organisationRole - This field will take either of the following roles:Manufacturer,Distributor,Retailer,Transporter
 	 */
-	async registerCompany(ctx, companyCRN, companyName, Location, organisationRole) {
+	async registerCompany(ctx, companyCRN, companyName, location, organisationRole) {
 		// Create a new composite key for the new company account
 		const companyID = ctx.stub.createCompositeKey('org.pharma-network.pharmanet.company', [companyCRN,companyName]);
 		let hierarchyKey;
@@ -69,12 +69,12 @@ class pharmanetContract extends Contract {
 	 * @param ctx - The transaction context object
 	 * @param medicineName - medicine Name
 	 * @param serialNo - serial number of the medicine 
-	 * @param mfgData -Date of manufacturing of the drug
+	 * @param mfgDate -Date of manufacturing of the drug
 	 * @param expDate - Expiration date of the drug
 	 * @param companyCRN - company Registration Number
 	 * @returns
 	 */
-	async addDrug(ctx, medicineName, serialNo, mfgData, expDate, companyCRN) {
+	async addDrug(ctx, medicineName, serialNo, mfgDate, expDate, companyCRN) {
 		// Create a new composite key for the new student account
 		const productID = ctx.stub.createCompositeKey('org.pharma-network.pharmanet.drug', [serialNo,medicineName]);
 		
@@ -108,7 +108,7 @@ class pharmanetContract extends Contract {
 	 */
 	async createPO(ctx,buyerCRN, sellerCRN, drugName, quantity){
 	
-	const poID = ctx.stub.createCompositeKey('org.pharma-network.pharmanet.drug.request', [serialNo,medicineName]);
+	const poID = ctx.stub.createCompositeKey('org.pharma-network.pharmanet.drug.request', [buyerCRN,medicineName]);
 		
 		// Create a student object to be stored in blockchain
 		let newPOObject = {
@@ -144,8 +144,8 @@ class pharmanetContract extends Contract {
 		// Create a student object to be stored in blockchain
 		let newshipmentObject = {
 			shipmentID: shipmentID,
-			creator: creator,
-			assets: assetArray,
+			creator: buyerCRN,
+			assets: listOfAssets,
 			transporter: transporterCRN,
 			status: "in-transit" 
 
@@ -198,15 +198,18 @@ class pharmanetContract extends Contract {
 
 		const drugID = ctx.stub.createCompositeKey('org.pharma-network.pharmanet.drug', [serialNo,drugName]);		
 		let drugBuffer= await ctx.stub.getState(drugID).catch(err => console.log(err));
-		let drugObject= JSON.parse(drugBuffer.toString());
-		if (drugObject.owner == retailerCRN)
-		{
-			drugObject.owner= customerAadhar;
-			let dataBuffer = Buffer.from(JSON.stringify(drugObject));
-			await ctx.stub.putState(drugID, dataBuffer);
+		console.log("drugBuffer"+drugBuffer);
+		if (drugBuffer.length != 0) {
+			let drugObject= JSON.parse(drugBuffer.toString());
+			if (drugObject.owner == retailerCRN)
+			{
+				drugObject.owner= customerAadhar;
+				let dataBuffer = Buffer.from(JSON.stringify(drugObject));
+				await ctx.stub.putState(drugID, dataBuffer);
+			}
+			else
+				throw new Error('drug : '+ drugName + 'is not owned by the retailer: '+ retailerCRN + '');
 		}
-		else
-			throw new Error('drug : '+ drugName + 'is not owned by the retailer: '+ retailerCRN + '');
 	}
 
 
